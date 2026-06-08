@@ -23,6 +23,12 @@
             justify-content: center; 
             min-height: 100vh; 
             box-sizing: border-box; 
+            /* Universal Background Watermark Config */
+            background-image: linear-gradient(rgba(245, 240, 230, 0.94), rgba(245, 240, 230, 0.94)), url('logo.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 350px;
+            background-attachment: fixed;
         }
         
         .container { 
@@ -54,11 +60,18 @@
             font-weight: bold;
         }
         
+        .panel-address {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 4px;
+            font-family: 'Arial', sans-serif;
+        }
+        
         .sub-header {
             font-size: 0.95em;
             color: var(--marigold);
             font-style: italic;
-            margin-top: 5px;
+            margin-top: 6px;
             letter-spacing: 2px;
             font-weight: bold;
         }
@@ -149,7 +162,6 @@
             background: rgba(211, 84, 0, 0.05);
         }
         
-        /* Dual Button Layout for Action Matrix */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -193,11 +205,16 @@
             box-shadow: 0 15px 40px rgba(128, 0, 32, 0.2); 
             border-radius: 4px; 
             position: relative;
+            /* Dynamic Watermark for the explicit voucher view */
+            background-image: linear-gradient(rgba(255, 252, 246, 0.95), rgba(255, 252, 246, 0.95)), url('logo.png');
+            background-position: center 65%;
+            background-repeat: no-repeat;
+            background-size: 280px;
         }
         
         .voucher-top {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .voucher-title {
@@ -209,13 +226,26 @@
             margin: 0;
         }
         
+        .voucher-address {
+            font-size: 0.8em;
+            color: #555;
+            font-style: italic;
+            margin-top: 6px;
+            line-height: 1.4;
+            max-width: 85%;
+            margin-left: auto;
+            margin-right: auto;
+            border-bottom: 1px solid rgba(211, 84, 0, 0.2);
+            padding-bottom: 8px;
+        }
+        
         .voucher-tagline {
             font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 3px;
             color: var(--marigold);
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 8px;
         }
         
         .guest-details-box {
@@ -319,7 +349,10 @@
         /* RESPONSIVE MEDIA OVERRIDE GATEWAYS                      */
         /* ======================================================= */
         @media (max-width: 550px) {
-            body { padding: 8px; }
+            body { 
+                padding: 8px; 
+                background-size: 220px;
+            }
             .container { padding: 16px; border-width: 2px; }
             
             .booking-row {
@@ -329,15 +362,17 @@
             }
             
             .action-grid {
-                grid-template-columns: 1fr; /* Stack actions vertically on mobile */
+                grid-template-columns: 1fr;
                 gap: 10px;
             }
             
             .luxury-voucher { 
                 padding: 22px 16px; 
                 outline-offset: -6px;
+                background-size: 190px;
             }
             .voucher-title { font-size: 1.6em; }
+            .voucher-address { font-size: 0.75em; max-width: 95%; }
             
             .guest-details-box {
                 grid-template-columns: 1fr;
@@ -394,6 +429,7 @@
     <div id="merchant-panel">
         <div class="header-band">
             <h1>Rameshwaram Bhavan</h1>
+            <div class="panel-address">Radhakund Bypass Road, Near Goverdhan Railway Station, Mathura, Uttar Pradesh</div>
             <div class="sub-header">Party Hall & Guest House</div>
         </div>
         
@@ -441,13 +477,14 @@
                 <button class="btn" id="copy-btn" onclick="copyToClipboard()" style="margin-top: 0; background: #7f8c8d;">📋 Copy Link</button>
                 <button class="btn" id="whatsapp-btn" style="margin-top: 0; background: #25D366;">🚀 Send WhatsApp</button>
             </div>
-            <div id="success-message" class="success-banner">✓ Execution Processed! Proceed with distribution.</div>
+            <div id="success-message" class="success-banner">✓ Execution Processed! Ready to send.</div>
         </div>
     </div>
 
     <div id="receipt-panel" class="luxury-voucher">
         <div class="voucher-top">
             <div class="voucher-title">Rameshwaram Bhavan</div>
+            <div class="voucher-address">Radhakund Bypass Road, Near Goverdhan Railway Station, Mathura, Uttar Pradesh</div>
             <div class="voucher-tagline">Booking Confirmation Voucher</div>
         </div>
         
@@ -457,8 +494,8 @@
                 <span id="r-guest-name">--</span>
             </div>
             <div class="detail-item" style="text-align: right;">
-                <strong>Date of Issue</strong>
-                <span id="r-date-stamp">--/--/----</span>
+                <strong>Date & Time of Issue</strong>
+                <span id="r-date-stamp">--/--/---- --:--</span>
             </div>
             <div class="detail-item" style="margin-top: 5px;">
                 <strong>Voucher Token ID</strong>
@@ -539,7 +576,6 @@
 
     function generateInvoiceLink() {
         const name = document.getElementById('cust-name').value.trim() || "Valued Guest";
-        // Sanitize incoming phone data matrix to stop character escaping vulnerabilities
         const phone = document.getElementById('cust-phone').value.trim().replace(/[^0-9]/g, '');
 
         const types = document.querySelectorAll('.b-type');
@@ -571,15 +607,12 @@
         const currentLink = window.location.href.split('?')[0];
         const consumerBillUrl = `${currentLink}?invoice=${serialized}`;
 
-        // Reveal hidden action elements
         document.getElementById('dispatch-box').style.display = 'block';
         document.getElementById('generated-url').value = consumerBillUrl;
         
-        // Reset controls
         document.getElementById('copy-btn').innerHTML = "📋 Copy Link";
         document.getElementById('success-message').style.display = 'none';
 
-        // Bind sanitized direct WhatsApp distribution routine
         const dynamicText = `Hello ${name}, your booking confirmation invoice for Rameshwaram Bhavan is ready. View your premium digital voucher here: ${consumerBillUrl}`;
         const whatsappGatewayUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(dynamicText)}`;
         
@@ -613,7 +646,12 @@
             document.body.style.backgroundColor = "#eae6df";
 
             document.getElementById('r-guest-name').innerText = rawJSON.g;
-            document.getElementById('r-date-stamp').innerText = new Date(rawJSON.stamp).toLocaleDateString('en-IN');
+            
+            const timestampObj = new Date(rawJSON.stamp);
+            const dateStr = timestampObj.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = timestampObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+            document.getElementById('r-date-stamp').innerText = `${dateStr} @ ${timeStr}`;
+            
             document.getElementById('r-invoice-id').innerText = `RB-${rawJSON.stamp.toString().slice(-6)}`;
 
             const ledgerBody = document.getElementById('r-ledger-entries');
