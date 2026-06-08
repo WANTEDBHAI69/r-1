@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rameshwaram Bhavan - Billing Desk</title>
+    <style>
+        :root { 
+            --marigold: #d35400; /* Auspicious Deep Orange */
+            --crimson: #800020;  /* Royal Festive Maroon */
+            --gold: #d4af37;     /* Elegant Metallic Gold tint */
+            --cream: #fdfbf7;    /* Warm Traditional Paper Background */
+            --dark-text: #2c3e50;
+        }
+        
+        body { 
+            background-color: #f5f0e6; 
+            color: var(--dark-text); 
+            font-family: 'Georgia', 'Times New Roman', serif; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            box-sizing: border-box; 
+        }
+        
+        .container { 
+            width: 100%; 
+            max-width: 600px; 
+            background: var(--cream); 
+            border: 3px double var(--crimson); 
+            border-radius: 8px; 
+            padding: 30px; 
+            box-sizing: border-box; 
+            box-shadow: 0 10px 25px rgba(128, 0, 32, 0.15); 
+        }
+        
+        /* Traditional Header Band */
+        .header-band {
+            text-align: center;
+            border-bottom: 2px solid var(--marigold);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        h1 { 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--crimson); 
+            font-size: 1.8em; 
+            font-weight: bold;
+        }
+        
+        .sub-header {
+            font-size: 0.95em;
+            color: var(--marigold);
+            font-style: italic;
+            margin-top: 5px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        
+        label { 
+            display: block; 
+            font-size: 0.9em; 
+            color: var(--crimson); 
+            margin-bottom: 8px; 
+            text-transform: uppercase; 
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        input, select { 
+            width: 100%; 
+            background: #ffffff; 
+            color: #000; 
+            border: 1.5px solid #bdc3c7; 
+            border-radius: 4px;
+            padding: 14px; 
+            box-sizing: border-box; 
+            font-family: 'Arial', sans-serif;
+            font-size: 1.05em; 
+            font-weight: 500;
+        }
+        input:focus, select:focus { 
+            outline: none; 
+            border-color: var(--marigold); 
+            box-shadow: 0 0 5px rgba(211, 84, 0, 0.3);
+        }
+        
+        .booking-loop-label {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.95em;
+            color: var(--crimson);
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .booking-row { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+            background: #fff; 
+            padding: 15px; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 4px;
+        }
+        
+        .btn { 
+            background: var(--crimson); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 4px;
+            padding: 16px; 
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1em; 
+            font-weight: bold;
+            cursor: pointer; 
+            transition: 0.2s; 
+            text-transform: uppercase; 
+            width: 100%; 
+            margin-top: 15px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover { 
+            background: var(--marigold); 
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--marigold);
+            border: 1.5px solid var(--marigold);
+            padding: 8px;
+            font-size: 0.9em;
+            margin-top: 5px;
+            box-shadow: none;
+        }
+        .btn-secondary:hover {
+            background: rgba(211, 84, 0, 0.05);
+        }
+        
+        #dispatch-box { 
+            display: none; 
+            margin-top: 25px; 
+            border-top: 2px dashed var(--marigold); 
+            padding-top: 20px; 
+        }
+        #generated-url { 
+            font-size: 0.95em; 
+            color: #555; 
+            background: #f9f9f9; 
+            border: 1px solid #ccc; 
+            font-family: monospace;
+        }
+        .success-banner {
+            color: #27ae60;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        /* ======================================================= */
+        /* ROYAL LUXURY DIGITAL VOUCHER LAYOUT (THE UNIQUE DESIGN)  */
+        /* ======================================================= */
+        .luxury-voucher { 
+            display: none; 
+            background: #fffcf6; 
+            color: #2c3e50; 
+            padding: 35px; 
+            border: 4px solid var(--crimson);
+            outline: 2px solid var(--gold);
+            outline-offset: -10px;
+            box-shadow: 0 15px 40px rgba(128, 0, 32, 0.2); 
+            border-radius: 4px; 
+            position: relative;
+        }
+        
+        .voucher-top {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .voucher-title {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--crimson);
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 0px rgba(212, 175, 55, 0.4);
+            margin: 0;
+        }
+        
+        .voucher-tagline {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--marigold);
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        /* Stylized Elegant Grid for Guest Info */
+        .guest-details-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            border-top: 1px dashed var(--gold);
+            border-bottom: 1px dashed var(--gold);
+            padding: 15px 0;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+        
+        .detail-item strong {
+            color: var(--crimson);
+            font-family: 'Arial', sans-serif;
+            font-size: 0.8em;
+            display: block;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Unique Elegant Item Display Blocks (No basic table lines) */
+        .ledger-container {
+            margin-bottom: 35px;
+        }
+        
+        .ledger-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            border-bottom: 2px solid var(--crimson);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .ledger-entry {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f1f1;
+            align-items: center;
+        }
+        
+        .service-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--crimson);
+        }
+        
+        .service-sub {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        
+        /* Grand Majestic Total Badge Box */
+        .grand-total-badge {
+            background: var(--crimson);
+            color: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid var(--gold);
+            box-shadow: 0 4px 10px rgba(128, 0, 32, 0.2);
+        }
+        
+        .total-label {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+        
+        .total-val {
+            font-size: 1.7em;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.5px;
+        }
+        
+        .luxury-footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.9em;
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="merchant-panel">
+        <div class="header-band">
+            <h1>Rameshwaram Bhavan</h1>
+            <div class="sub-header">Party Hall & Guest House</div>
+        </div>
+        
+        <div class="form-group">
+            <label>Guest Full Name</label>
+            <input type="text" id="cust-name" placeholder="e.g. Rajesh Kumar Sharma">
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <div class="booking-loop-label">Add Booking Services</div>
+            <div id="booking-container">
+                <div class="booking-row">
+                    <div>
+                        <select class="b-type" onchange="updateSubDivisions(this)">
+                            <option value="Room">Room</option>
+                            <option value="Hall">Hall</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select class="b-subdiv"></select>
+                    </div>
+                    <div>
+                        <input type="text" class="b-slot" placeholder="e.g. 2 Days / 4 Hrs" autocomplete="off">
+                    </div>
+                    <div>
+                        <input type="number" class="b-rate" placeholder="Price (₹)" min="0">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="addBookingRow()">+ Add More Rooms / Halls</button>
+        </div>
+
+        <button class="btn" onclick="generateInvoiceLink()">Generate Bill Link</button>
+
+        <div id="dispatch-box">
+            <label>Copy Link Below to Send on WhatsApp</label>
+            <input type="text" id="generated-url" readonly onclick="this.select()">
+            <button class="btn" id="copy-btn" onclick="copyToClipboard()" style="background: #27ae60;">📋 Copy Bill Link</button>
+            <div id="success-message" class="success-banner">✓ Link Copied! Ready to paste in WhatsApp.</div>
+        </div>
+    </div>
+
+    <div id="receipt-panel" class="luxury-voucher">
+        <div class="voucher-top">
+            <div class="voucher-title">Rameshwaram Bhavan</div>
+            <div class="voucher-tagline">Booking Confirmation Voucher</div>
+        </div>
+        
+        <div class="guest-details-box">
+            <div class="detail-item">
+                <strong>Honored Guest</strong>
+                <span id="r-guest-name">--</span>
+            </div>
+            <div class="detail-item" style="text-align: right;">
+                <strong>Date of Issue</strong>
+                <span id="r-date-stamp">--/--/----</span>
+            </div>
+            <div class="detail-item" style="margin-top: 5px;">
+                <strong>Voucher Token ID</strong>
+                <span id="r-invoice-id">RB-000000</span>
+            </div>
+            <div class="detail-item" style="text-align: right; margin-top: 5px;">
+                <strong>Status</strong>
+                <span style="color: #27ae60; font-weight: bold; font-family: 'Arial', sans-serif; font-size: 0.9em;">✓ VERIFIED SECURE</span>
+            </div>
+        </div>
+        
+        <div class="ledger-container">
+            <div class="ledger-header">
+                <div>Reserved Service</div>
+                <div style="text-align: center;">Duration</div>
+                <div style="text-align: right;">Amount</div>
+            </div>
+            <div id="r-ledger-entries">
+                </div>
+        </div>
+        
+        <div class="grand-total-badge">
+            <div class="total-label">Total Outstanding Settled</div>
+            <div class="total-val" id="r-grand-total">₹0.00</div>
+        </div>
+        
+        <div class="luxury-footer">
+            We are honored to assist with your celebrations. Thank you for choosing Rameshwaram Bhavan. May your stay be filled with blessings and happiness.
+        </div>
+    </div>
+</div>
+
+<script>
+    const ROOM_OPTIONS = ["1 Room", "2 Room", "3 Room", "4 Room"];
+    const HALL_OPTIONS = ["Marriage", "Ceremonic Function", "Tourist Stay"];
+
+    function updateSubDivisions(selectElement) {
+        const row = selectElement.closest('.booking-row');
+        const subdivSelect = row.querySelector('.b-subdiv');
+        subdivSelect.innerHTML = '';
+        
+        const sourceOptions = selectElement.value === "Room" ? ROOM_OPTIONS : HALL_OPTIONS;
+        
+        sourceOptions.forEach(opt => {
+            const el = document.createElement('option');
+            el.value = opt;
+            el.innerText = opt;
+            subdivSelect.appendChild(el);
+        });
+    }
+
+    function addBookingRow() {
+        const container = document.getElementById('booking-container');
+        const row = document.createElement('div');
+        row.className = 'booking-row';
+        row.innerHTML = `
+            <div>
+                <select class="b-type" onchange="updateSubDivisions(this)">
+                    <option value="Room">Room</option>
+                    <option value="Hall">Hall</option>
+                </select>
+            </div>
+            <div>
+                <select class="b-subdiv"></select>
+            </div>
+            <div>
+                <input type="text" class="b-slot" placeholder="e.g. 12 Hours" autocomplete="off">
+            </div>
+            <div>
+                <input type="number" class="b-rate" placeholder="Price (₹)" min="0">
+            </div>
+        `;
+        container.appendChild(row);
+        updateSubDivisions(row.querySelector('.b-type'));
+    }
+
+    updateSubDivisions(document.querySelector('.b-type'));
+
+    function generateInvoiceLink() {
+        const name = document.getElementById('cust-name').value.trim() || "Valued Guest";
+
+        const types = document.querySelectorAll('.b-type');
+        const subdivs = document.querySelectorAll('.b-subdiv');
+        const slots = document.querySelectorAll('.b-slot');
+        const rates = document.querySelectorAll('.b-rate');
+
+        let dataPayload = [];
+        for (let i = 0; i < types.length; i++) {
+            if (slots[i].value && rates[i].value) {
+                dataPayload.push({
+                    t: types[i].value,
+                    s: subdivs[i].value,
+                    d: slots[i].value,
+                    r: parseFloat(rates[i].value || 0)
+                });
+            }
+        }
+
+        if (dataPayload.length === 0) return alert("Please enter duration and price details for your booking.");
+
+        const transaction = {
+            g: name,
+            b: dataPayload,
+            stamp: Date.now()
+        };
+
+        const serialized = btoa(unescape(encodeURIComponent(JSON.stringify(transaction))));
+        const currentLink = window.location.href.split('?')[0];
+        const consumerBillUrl = `${currentLink}?invoice=${serialized}`;
+
+        document.getElementById('dispatch-box').style.display = 'block';
+        document.getElementById('generated-url').value = consumerBillUrl;
+        
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.innerHTML = "📋 Copy Bill Link";
+        document.getElementById('success-message').style.display = 'none';
+    }
+
+    function copyToClipboard() {
+        const urlField = document.getElementById('generated-url');
+        urlField.select();
+        urlField.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(urlField.value);
+        
+        document.getElementById('copy-btn').innerHTML = "✓ Copied Successfully!";
+        document.getElementById('success-message').style.display = 'block';
+    }
+
+    // CLIENT ENTRY UNPACKING POINT
+    function parseGridInvoice() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('invoice');
+
+        if (!token) return;
+
+        try {
+            const rawJSON = JSON.parse(decodeURIComponent(escape(atob(token))));
+            
+            // Reconfigure View Matrix for Customer Interface
+            document.getElementById('merchant-panel').style.display = 'none';
+            document.getElementById('receipt-panel').style.display = 'block';
+            document.body.style.backgroundColor = "#eae6df";
+
+            // Inject Metadata Fields
+            document.getElementById('r-guest-name').innerText = rawJSON.g;
+            document.getElementById('r-date-stamp').innerText = new Date(rawJSON.stamp).toLocaleDateString('en-IN');
+            document.getElementById('r-invoice-id').innerText = `RB-${rawJSON.stamp.toString().slice(-6)}`;
+
+            const ledgerBody = document.getElementById('r-ledger-entries');
+            ledgerBody.innerHTML = '';
+            let cumulativeTotal = 0;
+
+            rawJSON.b.forEach(item => {
+                cumulativeTotal += item.r;
+                
+                const entryBox = document.createElement('div');
+                entryBox.className = 'ledger-entry';
+                entryBox.innerHTML = `
+                    <div>
+                        <div class="service-title">${item.t} Reservation</div>
+                        <div class="service-sub">${item.s} Allocation</div>
+                    </div>
+                    <div style="text-align: center; font-weight: bold;">${item.d}</div>
+                    <div style="text-align: right; font-weight: bold; color: var(--crimson);">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
+                `;
+                ledgerBody.appendChild(entryBox);
+            });
+
+            document.getElementById('r-grand-total').innerText = `₹${cumulativeTotal.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            document.title = `${rawJSON.g} - Digital Stay Voucher`;
+
+        } catch (err) {
+            alert("Security fault. The data string configuration cannot be parsed.");
+        }
+    }
+
+    parseGridInvoice();
+</script>
+</body>
+</html>
