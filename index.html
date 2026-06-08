@@ -34,6 +34,7 @@
             padding: 30px; 
             box-sizing: border-box; 
             box-shadow: 0 10px 25px rgba(128, 0, 32, 0.15); 
+            height: fit-content;
         }
         
         /* Traditional Header Band */
@@ -171,7 +172,7 @@
         }
 
         /* ======================================================= */
-        /* ROYAL LUXURY DIGITAL VOUCHER LAYOUT (THE UNIQUE DESIGN)  */
+        /* ROYAL LUXURY DIGITAL VOUCHER LAYOUT                     */
         /* ======================================================= */
         .luxury-voucher { 
             display: none; 
@@ -209,7 +210,6 @@
             margin-top: 5px;
         }
         
-        /* Stylized Elegant Grid for Guest Info */
         .guest-details-box {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -231,7 +231,6 @@
             letter-spacing: 0.5px;
         }
         
-        /* Unique Elegant Item Display Blocks (No basic table lines) */
         .ledger-container {
             margin-bottom: 35px;
         }
@@ -270,7 +269,6 @@
             font-style: italic;
         }
         
-        /* Grand Majestic Total Badge Box */
         .grand-total-badge {
             background: var(--crimson);
             color: #fff;
@@ -308,6 +306,78 @@
             border-top: 1px solid #eee;
             padding-top: 20px;
         }
+
+        /* ======================================================= */
+        /* RESPONSIVE MEDIA OVERRIDE GATEWAYS (THE FIX)            */
+        /* ======================================================= */
+        @media (max-width: 550px) {
+            body { padding: 8px; }
+            .container { padding: 16px; border-width: 2px; }
+            
+            /* Admin Form Elements Adaptability */
+            .booking-row {
+                grid-template-columns: 1fr 1fr; /* 2x2 Clean Layout for Mobile Inputs */
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            /* Luxury Voucher Glass Adjustments */
+            .luxury-voucher { 
+                padding: 22px 16px; 
+                outline-offset: -6px;
+            }
+            .voucher-title { font-size: 1.6em; }
+            
+            .guest-details-box {
+                grid-template-columns: 1fr; /* Stack metadata vertically */
+                gap: 12px;
+            }
+            .guest-details-box .detail-item { text-align: left !important; }
+            
+            /* Destroy rigid column headers on small glass screens */
+            .ledger-header { display: none; }
+            
+            /* Decouple structural grid into fluid row components */
+            .ledger-entry {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: 14px 0;
+            }
+            .ledger-entry > div:nth-child(1) {
+                flex: 0 0 100%; /* Force labels to span entire width */
+                margin-bottom: 6px;
+            }
+            .ledger-entry > div:nth-child(2) {
+                flex: 1;
+                text-align: left !important;
+                font-size: 0.95em;
+                font-weight: bold;
+                color: var(--marigold);
+            }
+            /* Generate an on-the-fly virtual label for mobile readability */
+            .ledger-entry > div:nth-child(2)::before {
+                content: "Duration: ";
+                font-weight: normal;
+                color: #7f8c8d;
+                font-size: 0.9em;
+            }
+            .ledger-entry > div:nth-child(3) {
+                flex: 1;
+                text-align: right !important;
+                font-weight: bold;
+                color: var(--crimson);
+            }
+            
+            .grand-total-badge {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+                padding: 15px;
+            }
+            .total-val { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
@@ -338,7 +408,7 @@
                         <select class="b-subdiv"></select>
                     </div>
                     <div>
-                        <input type="text" class="b-slot" placeholder="e.g. 2 Days / 4 Hrs" autocomplete="off">
+                        <input type="text" class="b-slot" placeholder="e.g. 2 Days" autocomplete="off">
                     </div>
                     <div>
                         <input type="number" class="b-rate" placeholder="Price (₹)" min="0">
@@ -500,7 +570,6 @@
         document.getElementById('success-message').style.display = 'block';
     }
 
-    // CLIENT ENTRY UNPACKING POINT
     function parseGridInvoice() {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('invoice');
@@ -510,12 +579,10 @@
         try {
             const rawJSON = JSON.parse(decodeURIComponent(escape(atob(token))));
             
-            // Reconfigure View Matrix for Customer Interface
             document.getElementById('merchant-panel').style.display = 'none';
             document.getElementById('receipt-panel').style.display = 'block';
             document.body.style.backgroundColor = "#eae6df";
 
-            // Inject Metadata Fields
             document.getElementById('r-guest-name').innerText = rawJSON.g;
             document.getElementById('r-date-stamp').innerText = new Date(rawJSON.stamp).toLocaleDateString('en-IN');
             document.getElementById('r-invoice-id').innerText = `RB-${rawJSON.stamp.toString().slice(-6)}`;
@@ -534,8 +601,8 @@
                         <div class="service-title">${item.t} Reservation</div>
                         <div class="service-sub">${item.s} Allocation</div>
                     </div>
-                    <div style="text-align: center; font-weight: bold;">${item.d}</div>
-                    <div style="text-align: right; font-weight: bold; color: var(--crimson);">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
+                    <div style="text-align: center;">${item.d}</div>
+                    <div style="text-align: right;">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
                 `;
                 ledgerBody.appendChild(entryBox);
             });
