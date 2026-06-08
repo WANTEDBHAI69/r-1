@@ -23,11 +23,11 @@
             justify-content: center; 
             min-height: 100vh; 
             box-sizing: border-box; 
-            /* Subtle background logo effect for the entire page */
-            background-image: linear-gradient(rgba(245, 240, 230, 0.94), rgba(245, 240, 230, 0.94)), url('logo.png');
+            /* Amplified Universal Background Watermark Config */
+            background-image: linear-gradient(rgba(245, 240, 230, 0.93), rgba(245, 240, 230, 0.93)), url('logo.png');
             background-position: center;
             background-repeat: no-repeat;
-            background-size: 350px;
+            background-size: 520px; /* Expanded size framework */
             background-attachment: fixed;
         }
         
@@ -205,11 +205,11 @@
             box-shadow: 0 15px 40px rgba(128, 0, 32, 0.2); 
             border-radius: 4px; 
             position: relative;
-            /* Dynamic Watermark for the explicit voucher view */
-            background-image: linear-gradient(rgba(255, 252, 246, 0.95), rgba(255, 252, 246, 0.95)), url('logo.png');
-            background-position: center 65%;
+            /* High-Impact Watermark for the customer view */
+            background-image: linear-gradient(rgba(255, 252, 246, 0.91), rgba(255, 252, 246, 0.91)), url('logo.png');
+            background-position: center 55%;
             background-repeat: no-repeat;
-            background-size: 280px;
+            background-size: 420px; /* Maximized inside card borders */
         }
         
         .voucher-top {
@@ -257,6 +257,7 @@
             padding: 15px 0;
             margin-bottom: 30px;
             font-size: 0.95em;
+            background: rgba(253, 251, 247, 0.6); /* Translucent shield over logo */
         }
         
         .detail-item strong {
@@ -271,6 +272,7 @@
         
         .ledger-container {
             margin-bottom: 35px;
+            background: rgba(253, 251, 247, 0.6);
         }
         
         .ledger-header {
@@ -317,6 +319,8 @@
             align-items: center;
             border: 2px solid var(--gold);
             box-shadow: 0 4px 10px rgba(128, 0, 32, 0.2);
+            position: relative;
+            z-index: 2;
         }
         
         .total-label {
@@ -343,6 +347,7 @@
             line-height: 1.6;
             border-top: 1px solid #eee;
             padding-top: 20px;
+            background: rgba(253, 251, 247, 0.6);
         }
 
         /* ======================================================= */
@@ -351,7 +356,7 @@
         @media (max-width: 550px) {
             body { 
                 padding: 8px; 
-                background-size: 220px;
+                background-size: 340px; /* Responsive mobile body fallback */
             }
             .container { padding: 16px; border-width: 2px; }
             
@@ -369,7 +374,7 @@
             .luxury-voucher { 
                 padding: 22px 16px; 
                 outline-offset: -6px;
-                background-size: 190px;
+                background-size: 290px; /* Responsive mobile card fallback */
             }
             .voucher-title { font-size: 1.6em; }
             .voucher-address { font-size: 0.75em; max-width: 95%; }
@@ -439,8 +444,8 @@
         </div>
 
         <div class="form-group">
-            <label>Guest WhatsApp Number (with country code)</label>
-            <input type="text" id="cust-phone" placeholder="e.g. 919999999999">
+            <label>Guest WhatsApp Number</label>
+            <input type="text" id="cust-phone" value="91" placeholder="e.g. 919999999999">
         </div>
         
         <div style="margin: 25px 0;">
@@ -617,7 +622,7 @@
         const whatsappGatewayUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(dynamicText)}`;
         
         document.getElementById('whatsapp-btn').onclick = () => {
-            if(!phone) return alert("Enter target WhatsApp number before dispatch execution.");
+            if(!phone || phone === '91') return alert("Enter target mobile number after country code before dispatch.");
             window.open(whatsappGatewayUrl, '_blank');
         };
     }
@@ -628,11 +633,10 @@
         urlField.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(urlField.value);
         
-        document.getElementById('copy-btn').innerHTML = "✓ Copied Successfully!";
+        document.getElementById('copy-btn').innerHTML = "✓ Copied!";
         document.getElementById('success-message').style.display = 'block';
     }
 
-    // CLIENT ENTRY UNPACKING POINT
     function parseGridInvoice() {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('invoice');
@@ -642,15 +646,12 @@
         try {
             const rawJSON = JSON.parse(decodeURIComponent(escape(atob(token))));
             
-            // Reconfigure View Matrix for Customer Interface
             document.getElementById('merchant-panel').style.display = 'none';
             document.getElementById('receipt-panel').style.display = 'block';
             document.body.style.backgroundColor = "#eae6df";
 
-            // Inject Metadata Fields
             document.getElementById('r-guest-name').innerText = rawJSON.g;
             
-            // Generate full time stamp Matrix
             const timestampObj = new Date(rawJSON.stamp);
             const dateStr = timestampObj.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const timeStr = timestampObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -672,8 +673,8 @@
                         <div class="service-title">${item.t} Reservation</div>
                         <div class="service-sub">${item.s} Allocation</div>
                     </div>
-                    <div style="text-align: center; font-weight: bold;">${item.d}</div>
-                    <div style="text-align: right; font-weight: bold; color: var(--crimson);">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
+                    <div style="text-align: center;">${item.d}</div>
+                    <div style="text-align: right;">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
                 `;
                 ledgerBody.appendChild(entryBox);
             });
