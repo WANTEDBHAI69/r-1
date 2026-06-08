@@ -23,7 +23,7 @@
             justify-content: center; 
             min-height: 100vh; 
             box-sizing: border-box; 
-            /* Universal Background Watermark Config */
+            /* Subtle background logo effect for the entire page */
             background-image: linear-gradient(rgba(245, 240, 230, 0.94), rgba(245, 240, 230, 0.94)), url('logo.png');
             background-position: center;
             background-repeat: no-repeat;
@@ -628,10 +628,11 @@
         urlField.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(urlField.value);
         
-        document.getElementById('copy-btn').innerHTML = "✓ Copied!";
+        document.getElementById('copy-btn').innerHTML = "✓ Copied Successfully!";
         document.getElementById('success-message').style.display = 'block';
     }
 
+    // CLIENT ENTRY UNPACKING POINT
     function parseGridInvoice() {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('invoice');
@@ -641,12 +642,15 @@
         try {
             const rawJSON = JSON.parse(decodeURIComponent(escape(atob(token))));
             
+            // Reconfigure View Matrix for Customer Interface
             document.getElementById('merchant-panel').style.display = 'none';
             document.getElementById('receipt-panel').style.display = 'block';
             document.body.style.backgroundColor = "#eae6df";
 
+            // Inject Metadata Fields
             document.getElementById('r-guest-name').innerText = rawJSON.g;
             
+            // Generate full time stamp Matrix
             const timestampObj = new Date(rawJSON.stamp);
             const dateStr = timestampObj.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const timeStr = timestampObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -668,8 +672,8 @@
                         <div class="service-title">${item.t} Reservation</div>
                         <div class="service-sub">${item.s} Allocation</div>
                     </div>
-                    <div style="text-align: center;">${item.d}</div>
-                    <div style="text-align: right;">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
+                    <div style="text-align: center; font-weight: bold;">${item.d}</div>
+                    <div style="text-align: right; font-weight: bold; color: var(--crimson);">₹${item.r.toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
                 `;
                 ledgerBody.appendChild(entryBox);
             });
